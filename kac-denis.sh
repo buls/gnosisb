@@ -47,11 +47,32 @@ echo ""
 echo "========================M2crypto configuration============================="
 echo "copying files ...."
 echo "Enter bluefox password..."
-scp bluefox@172.16.3.203:/home/bluefox/kalite-repo/M2Crypto-0.22.3.tar.gz /home/houzibe/kalite-local-repo
-scp bluefox@172.16.3.203:/home/bluefox/kalite-repo/gcc-5.2.0.tar.gz /home/houzibe/kalite-local-repo
-cd /home/houzibe/kalite-local-repo/
-tar zxvf gcc-5.2.0.tar.gz
+#scp bluefox@172.16.3.203:/home/bluefox/kalite-repo/M2Crypto-0.22.3.tar.gz /home/houzibe/kalite-local-repo
+#scp bluefox@172.16.3.203:/home/bluefox/kalite-repo/gcc-5.2.0.tar.gz /home/houzibe/kalite-local-repo
 echo "installing c compiler..."
+cd /home/houzibe/kalite-local-repo/gcc-5.2.0
+#mkdir gcc-build                                   &&
+cd    gcc-build                                   &&
+
+../configure                                        \
+    --prefix=/usr                                    \
+    --disable-multilib                               \
+    --with-system-zlib                               \
+    --enable-languages=c,c++                         &&
+make
+ulimit -s 32768 &&
+make -k check
+
+G
+make install &&
+/home/houzibe/kalite-local-repo/gcc-5.2.0
+mkdir -pv /usr/share/gdb/auto-load/usr/lib              &&
+mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib &&
+
+chown -v -R root:root \
+    /usr/lib/gcc/*linux-gnu/5.2.0/include{,-fixed}
+ 
+#tar zxvf gcc-5.2.0.tar.gz
 #tar xzvf /home/M2crypto/M2Crypto-0.22.3.tar.gz
 #cd /home/M2crypto/M2Crypto-0.22.3/
 #sudo python setup.py install
